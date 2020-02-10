@@ -115,6 +115,11 @@ ggplot(BetterLifeIndex_4, aes(x = reorder(Country, -Value), y = Value, fill = In
   geom_bar(stat = "identity") +
   coord_flip() +
   labs(title = "Better life index rankings for European OECD countries", x = "Country", y = "Value")
+
+
+
+
+
 ```
 
 
