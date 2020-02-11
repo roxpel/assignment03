@@ -6,7 +6,8 @@ output: html_document
 ---
 
 
-# Education 
+# Better Life Performances of OECD countries based on OECD's Better Life Index data 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -34,66 +35,10 @@ str(BetterLifeIndex)
 ```{r}
 unique(BetterLifeIndex$Indicator)
 unique(BetterLifeIndex$Country)
+unique(BetterLifeIndex$Unit)
 ```
 
 ```{r}
-
-# Draft: Haven't ran these (codes from before)
-
-BetterLifeIndex_homicide <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Indicator == "Homicide rate", Inequality == "Total") %>%
-  arrange(desc(Value))
-
-BetterLifeIndex_mktinsecurity <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Indicator == "Labour Market Insecurity", Inequality == "Total") %>%
-  arrange(desc(Value))
-
-BetterLifeIndex_longworkhours <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Indicator == "Employees working very long hours", Inequality == "Total") %>%
-  arrange(desc(Value))
-
-BetterLifeIndex_pollution <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Indicator == "Air pollution", Inequality == "Total") %>%
-  arrange(desc(Value))
-
-BetterLifeIndex_unemployment <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Indicator == "Long-term unemployment rate", Inequality == "Total") %>%
-  arrange(desc(Value))
-
-BetterLifeIndex_nobasicfacilities <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Indicator == "Dwellings without basic facilities", Inequality == "Total") %>%
-  arrange(desc(Value))
-
-```
-```{r}
-
-BetterLifeIndex_Japan <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Country == "Japan", Indicator == "Homicide rate" | Indicator == "Labour Market Insecurity" | Indicator == "Employees working very long hours" | Indicator == "Air pollution" | Indicator == "Long-term unemployment rate" | Indicator == "Dwellings without basic facilities", Inequality == "Total")
-
-BetterLifeIndex_Brazil <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Country == "Brazil", Indicator == "Homicide rate" | Indicator == "Labour Market Insecurity" | Indicator == "Employees working very long hours" | Indicator == "Air pollution" | Indicator == "Long-term unemployment rate" | Indicator == "Dwellings without basic facilities", Inequality == "Total")
-
-BetterLifeIndex_France <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Country == "France", Indicator == "Homicide rate" | Indicator == "Labour Market Insecurity" | Indicator == "Employees working very long hours" | Indicator == "Air pollution" | Indicator == "Long-term unemployment rate" | Indicator == "Dwellings without basic facilities", Inequality == "Total")
-
-BetterLifeIndex_SouthAfrica <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Country == "South Africa", Indicator == "Homicide rate" | Indicator == "Labour Market Insecurity" | Indicator == "Employees working very long hours" | Indicator == "Air pollution" | Indicator == "Long-term unemployment rate" | Indicator == "Dwellings without basic facilities", Inequality == "Total")
-
-BetterLifeIndex_NewZealand <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Value) %>%
-  filter(Country == "New Zealand", Indicator == "Homicide rate" | Indicator == "Labour Market Insecurity" | Indicator == "Employees working very long hours" | Indicator == "Air pollution" | Indicator == "Long-term unemployment rate" | Indicator == "Dwellings without basic facilities", Inequality == "Total")
-
-
 
 # These are interesting
 
@@ -105,21 +50,33 @@ BetterLifeIndex_3 <- BetterLifeIndex %>%
   select(Country, Indicator, Inequality, Value) %>%
   filter(Indicator == "Homicide rate" | Indicator == "Labour Market Insecurity" | Indicator == "Employees working very long hours" | Indicator == "Air pollution" | Indicator == "Long-term unemployment rate" | Indicator == "Dwellings without basic facilities", Inequality == "Total")
 
-BetterLifeIndex_4 <- BetterLifeIndex %>%
+
+
+#######
+
+
+
+BetterLifeIndex_European_bad <- BetterLifeIndex %>%
   select(Country, Indicator, Inequality, Value) %>%
   filter(Country == "Austria" | Country == "Belgium" | Country == "Czech Republic" | Country == "Denmark" | Country == "Finland" | Country == "France" | Country == "Germany" | Country == "Greece" | Country == "Hungary" | Country == "Iceland" | Country == "Ireland" | Country == "Italy" | Country == "Luxembourg" | Country == "Netherlands" | Country == "Norway" | Country == "Poland" | Country == "Slovak Republic" | Country == "Spain" | Country == "Sweden" | Country == "Switzerland" | Country == "United Kingdom" | Country == "Estonia" | Country == "Latvia" | Country == "Russia" | Country == "Slovenia", Indicator == "Homicide rate" | Indicator == "Labour Market Insecurity" | Indicator == "Employees working very long hours" | Indicator == "Air pollution" | Indicator == "Long-term unemployment rate" | Indicator == "Dwellings without basic facilities", Inequality == "Total")
 
+
+view(BetterLifeIndex)
 ```
 ```{r}
-ggplot(BetterLifeIndex_4, aes(x = reorder(Country, -Value), y = Value, fill = Indicator)) + 
+
+ggplot(BetterLifeIndex_European_bad, aes(x = reorder(Country, -Value), y = Value, fill = Indicator)) + 
   geom_bar(stat = "identity") +
   coord_flip() +
-  labs(title = "Better life index rankings for European OECD countries", x = "Country", y = "Value")
-
-
-
-
-
+  labs(title = "Better life index rankings for European OECD countries", x = "Country", y = "Average score")
+  
+  
+### WITH THE FOOTNOTE
+  ggplot(BetterLifeIndex_European_bad, aes(x = reorder(Country, -Value), y = Value, fill = Indicator)) + geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Better life index rankings for European OECD countries", x = "Country", y = "Average score") +
+  labs(bottom = textGrob("The Average score for the different indicators is calculated in percentages, scores, ratio, US dollar, years, micrograms per cubic meter, or hours.")) 
+  
 ```
 
 
@@ -127,33 +84,50 @@ ggplot(BetterLifeIndex_4, aes(x = reorder(Country, -Value), y = Value, fill = In
 
 
 ```{r}
-# Create facet of 9 with  9 indicators for top 10 countries in those categories of indicators with geom_point 
 
-ggplot(BetterLifeIndex_homicide[1:10,], aes(Country, Value)) +
-  geom_point(aes(color = Country), stat = "identity")
+### HIDE NUMBERS AND ADD THEM WITHIN THE SLICES.
+BetterLifeIndex_France <- BetterLifeIndex_European_bad %>%
+  select(Country, Indicator, Inequality, Value) %>%
+  filter(Country == "France")
 
-
-
-
-
-
-
-ggplot(aq_trim, aes(Day, Ozone, size=Wind))+
-  geom_point(shape=21)+
-  geom_smooth(aes(weight = Wind), method = lm, size=1) +
-  scale_size_area(guide = "none") +
-  facet_wrap(~Month)
+ggplot(BetterLifeIndex_France, aes(x = "", y = Value, fill = Indicator)) +
+  geom_bar(width = 1, stat='identity') + coord_polar("y") + 
+  labs(title = "OECD Better Life Index Performance of France", x = "", y = "") +
+  theme(plot.title = element_text(hjust = 0.5))
 
 ```
+```{r}
+
+# Graph for Education: Educational attainment, Student Skills, Years in education
+
+BetterLifeIndex_European_Education <- BetterLifeIndex %>%
+  select(Country, Indicator, Inequality, Value) %>%
+  filter(Country == "Austria" | Country == "Belgium" | Country == "Czech Republic" | Country == "Denmark" | Country == "Finland" | Country == "France" | Country == "Germany" | Country == "Greece" | Country == "Hungary" | Country == "Iceland" | Country == "Ireland" | Country == "Italy" | Country == "Luxembourg" | Country == "Netherlands" | Country == "Norway" | Country == "Poland" | Country == "Slovak Republic" | Country == "Spain" | Country == "Sweden" | Country == "Switzerland" | Country == "United Kingdom" | Country == "Estonia" | Country == "Latvia" | Country == "Russia" | Country == "Slovenia", Indicator == "Educational attainment" | Indicator == "Student skills" | Indicator == "Years in education", Inequality == "Total")
+
+ggplot(BetterLifeIndex_European_Education, aes(x = reorder(Country, -Value), y = Value, fill = Indicator)) + 
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Better life index performance in education for European OECD countries", x = "Country", y = "Average score")
+
+
 
 
 ```
-
 
 ```{r}
-ggplot(BetterLifeIndex_homicide[1:10,], aes(x = reorder(Country, -Value), Value), color = Occasion) +
-  geom_bar(stat = "identity")
+BetterLifeIndex_pct <- BetterLifeIndex %>%
+  select(Country, Indicator, Inequality, Unit, Value) %>%
+  filter(Inequality == "Total", Unit == "Percentage")
+
+count(BetterLifeIndex_pct, vars = Unit, wt_var = Country)
+
+BetterLifeIndex_pct_France <- BetterLifeIndex_pct %>%
+  select(Country, Indicator, Inequality, Unit, Value) %>%
+  filter(Country == "France")
+
+
 ```
+
 
 
 
