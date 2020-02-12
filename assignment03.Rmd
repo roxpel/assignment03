@@ -25,7 +25,7 @@ View(BetterLifeIndex)
 library(dplyr)
 library(ggplot2)
 library(tidyverse)
-library(stringr)
+library(ggalt)
 ```
 
 ```{r}
@@ -65,37 +65,61 @@ BetterLifeIndex_European_bad <- BetterLifeIndex_European %>%
 ```
 ```{r}
 
-# Creating new dataframe with safety and life satisfaction indicators for all countries to measure their correlation
+# Creating new dataframe with health and life satisfaction indicators for all countries to measure their correlation
 
-BetterLifeIndex_Safety_Satisfaction <- spread(BetterLifeIndex, Indicator, Value)
+Leisure <- BetterLifeIndex %>%
+  filter(Indicator == "Time devoted to leisure and personal care" & Inequality == "Total") %>%
+  select(Country, Value)
 
-BetterLifeIndex_Safety_Satisfaction <- BetterLifeIndex_Safety_Satisfaction[,c("Country", "Feeling safe walking alone at night", "Life satisfaction")]
-  
+Life_Satisfaction <- BetterLifeIndex %>%
+  filter(Indicator == "Life satisfaction" & Inequality == "Total") %>%
+  select(Country, Value)
 
-BetterLifeIndex_Safety_Satisfaction <- BetterLifeIndex_Safety_Satisfaction %>% group_by(Country) %>% summarise()
+BetterLifeIndex_Leisure_Satisfaction <- inner_join(Leisure, Life_Satisfaction, by = "Country")
 
-
-
-ggplot(BetterLifeIndex_Safety_Satisfaction, aes("Feeling safe walking alone at night", "Life satisfaction")) + geom_point(aes(color = "Country"))
-
-
-view(BetterLifeIndex_Safety_Satisfaction)
+# Creating scatterplot
+ 
+ggplot(BetterLifeIndex_Leisure_Satisfaction[1:38,], aes(Value.x, Value.y)) + geom_point() +
+  geom_point(data = BetterLifeIndex_Leisure_Satisfaction[39,], color = "blue") +
+  labs(
+    x = "Time devoted to leisure and personal care",
+    y = "Life satisfaction",
+    title = "Does more leisure make you happier?"
+  )
 
 ```
 
 ```{r}
-BetterLifeIndex_pct_LifeSatisfaction <- BetterLifeIndex %>%
-  select(Country, Indicator, Inequality, Unit, Value) %>%
-  filter(Inequality == "Total", Unit == "Percentage", Indicator == "Feeling safe walking alone at night")
+
+# Creating two dataframes for 
+BetterLifeIndex_Income_Disparity_Men <- BetterLifeIndex %>% filter(Indicator == "Household net adjusted disposable income" & Inequality == "Men") %>% select(Country, Value)
+  
+BetterLifeIndex_Income_Disparity_Women <- BetterLifeIndex %>% filter(Indicator == "Household net adjusted disposable income" & Inequality == "Women") %>% select(Country, Value)
+ 
+BetterLifeIndex_Income_Disparity <- inner_join(BetterLifeIndex_Income_Disparity_Women, BetterLifeIndex_Income_Disparity_Men, by = "Country")
+
+view(BetterLifeIndex_Income_Disparity)
+
+ggplot(BetterLifeIndex_Income_Disparity) + geom_dumbbell(aes(x = Value.x, xend = Value.y, y = Country, group = Country), size = 1.5) +
+  geom_segment(aes(x = Value.x, xend = Value.y, y = Country, yend = Country), size = 1.5, color = 'red')
 
 
+p <- ggplot(BetterLifeIndex_Income_Disparity) + geom_point(aes(x = Value.x, y = Country), size = 1.5) + 
+  geom_point(aes(x = Value.y, y = Country), size = 1.5)
 
-count(BetterLifeIndex_pct, vars = Unit, wt_var = Country)
+p + geom_path(aes(x = Value.x, xend = Value.y, y = Country, yend = Country), size = 1.5, alpha = 0.75)
 
-BetterLifeIndex_pct_France <- BetterLifeIndex_pct %>%
-  select(Country, Indicator, Inequality, Unit, Value) %>%
-  filter(Country == "France")
 
+# library(plotly)
+# p <- plot_ly(BetterLifeIndex_Income_Disparity, color = I("gray80")) %>%
+#   add_segments(x = ~Value.x, xend = ~Value.y, y = ~Country, yend = ~Country, showlegend = FALSE) %>%
+#   add_markers(x = ~Value.x, y = ~Country, name = "Women", color = I("pink")) %>%
+#   add_markers(x = ~Value.y, y = ~Country, name = "Men", color = I("blue")) %>%
+#   layout(
+#     title = "Gender earnings disparity",
+#     xaxis = list(title = "Annual Salary (in thousands)"),
+#     margin = list(l = 65)
+#   )
 
 ```
 
