@@ -91,23 +91,28 @@ ggplot(BetterLifeIndex_Leisure_Satisfaction[1:38,], aes(Value.x, Value.y)) + geo
 
 ```{r}
 
-# Creating two dataframes for 
+# Creating two dataframes for gender inequality in income
+
 BetterLifeIndex_Income_Disparity_Men <- BetterLifeIndex %>% filter(Indicator == "Household net adjusted disposable income" & Inequality == "Men") %>% select(Country, Value)
   
 BetterLifeIndex_Income_Disparity_Women <- BetterLifeIndex %>% filter(Indicator == "Household net adjusted disposable income" & Inequality == "Women") %>% select(Country, Value)
  
+# Creating a new dataframe for gender dispartity in income by merging the two datasets
+
 BetterLifeIndex_Income_Disparity <- inner_join(BetterLifeIndex_Income_Disparity_Women, BetterLifeIndex_Income_Disparity_Men, by = "Country")
 
 view(BetterLifeIndex_Income_Disparity)
+```
 
-ggplot(BetterLifeIndex_Income_Disparity) + geom_dumbbell(aes(x = Value.x, xend = Value.y, y = Country, group = Country), size = 1.5) +
-  geom_segment(aes(x = Value.x, xend = Value.y, y = Country, yend = Country), size = 1.5, color = 'red')
+```{r}
+ggplot(BetterLifeIndex_Income_Disparity) + 
+  geom_dumbbell(aes(x = Value.x, xend = Value.y, y = Country, group = Country), size = 1.5)
+#  geom_segment(aes(x = Value.x, xend = Value.y, y = Country, yend = Country), size = 1.5, color = 'red')
 
+# p <- ggplot(BetterLifeIndex_Income_Disparity) + geom_point(aes(x = Value.x, y = Country), size = 1.5) + 
+#  geom_point(aes(x = Value.y, y = Country), size = 1.5)
 
-p <- ggplot(BetterLifeIndex_Income_Disparity) + geom_point(aes(x = Value.x, y = Country), size = 1.5) + 
-  geom_point(aes(x = Value.y, y = Country), size = 1.5)
-
-p + geom_path(aes(x = Value.x, xend = Value.y, y = Country, yend = Country), size = 1.5, alpha = 0.75)
+# p + geom_path(aes(x = Value.x, xend = Value.y, y = Country, yend = Country), size = 1.5, alpha = 0.75)
 
 
 # library(plotly)
