@@ -3,27 +3,22 @@ title: "Assignment 03"
 author: "Roxane Peloux"
 date: "2/9/2020"
 output: html_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
-
 # Better Life Performances of OECD countries based on OECD's Better Life Index data 
+
+Date
+
+### By Roxane
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 ```{r}
-library(readr)
 BetterLifeIndex <- read_csv("BetterLifeIndex.csv")
-View(BetterLifeIndex)
-
-library(dplyr)
-library(ggplot2)
 library(tidyverse)
 library(ggalt)
 ```
@@ -48,7 +43,7 @@ view(BetterLifeIndex)
 
 BetterLifeIndex_European <- BetterLifeIndex %>%
   select(Country, Indicator, Inequality, Unit, Value) %>%
-  filter(Country == "Austria" | Country == "Belgium" | Country == "Czech Republic" | Country == "Denmark" | Country == "Finland" | Country == "France" | Country == "Germany" | Country == "Greece" | Country == "Hungary" | Country == "Iceland" | Country == "Ireland" | Country == "Italy" | Country == "Luxembourg" | Country == "Netherlands" | Country == "Norway" | Country == "Poland" | Country == "Portugal" | Country == "Sloval Republic" | Country == "Spain" | Country == "Estonia" | Country == "Latvia" | Country == "Russia" | Country == "Slovenia")
+  filter(Country == "Austria" | Country == "Belgium" | Country == "Czech Republic" | Country == "Denmark" | Country == "Estonia" | Country == "Finland" | Country == "France" | Country == "Germany" | Country == "Greece" | Country == "Hungary" | Country == "Iceland" | Country == "Ireland" | Country == "Italy" | Country == "Latvia" | Country == "Luxembourg" | Country == "Netherlands" | Country == "Norway" | Country == "Poland" | Country == "Portugal" | Country == "Sloval Republic" | Country == "Slovenia" | Country == "Spain" | Country == "Sweden" | Country == "Switzerland" | Country == "United Kingdom")
 
 # Creating dataframe of only European OECD countries for negative indicators 
 
@@ -65,7 +60,7 @@ BetterLifeIndex_European_bad <- BetterLifeIndex_European %>%
 ```
 ```{r}
 
-# Creating new dataframe with health and life satisfaction indicators for all countries to measure their correlation
+# Creating new dataframes with leisure/personal care and life satisfaction indicators for all countries to measure their correlation
 
 Leisure <- BetterLifeIndex %>%
   filter(Indicator == "Time devoted to leisure and personal care" & Inequality == "Total") %>%
@@ -77,7 +72,7 @@ Life_Satisfaction <- BetterLifeIndex %>%
 
 BetterLifeIndex_Leisure_Satisfaction <- inner_join(Leisure, Life_Satisfaction, by = "Country")
 
-# Creating scatterplot
+# Creating scatterplot of life satisfaction as a function of leisure and personal care by using the new dataframe created
  
 ggplot(BetterLifeIndex_Leisure_Satisfaction[1:38,], aes(Value.x, Value.y)) + geom_point() +
   geom_point(data = BetterLifeIndex_Leisure_Satisfaction[39,], color = "blue") +
@@ -87,44 +82,20 @@ ggplot(BetterLifeIndex_Leisure_Satisfaction[1:38,], aes(Value.x, Value.y)) + geo
     title = "Does more leisure make you happier?"
   )
 
+# The blue dot represents OECD total (averaged)
+
 ```
 
 ```{r}
+# Creating graph to measure gender inequality in feelings of safety
 
-# Creating two dataframes for gender inequality in income
-
-BetterLifeIndex_Income_Disparity_Men <- BetterLifeIndex %>% filter(Indicator == "Household net adjusted disposable income" & Inequality == "Men") %>% select(Country, Value)
-  
-BetterLifeIndex_Income_Disparity_Women <- BetterLifeIndex %>% filter(Indicator == "Household net adjusted disposable income" & Inequality == "Women") %>% select(Country, Value)
- 
-# Creating a new dataframe for gender dispartity in income by merging the two datasets
-
-BetterLifeIndex_Income_Disparity <- inner_join(BetterLifeIndex_Income_Disparity_Women, BetterLifeIndex_Income_Disparity_Men, by = "Country")
-
-view(BetterLifeIndex_Income_Disparity)
-```
-
-```{r}
-ggplot(BetterLifeIndex_Income_Disparity) + 
-  geom_dumbbell(aes(x = Value.x, xend = Value.y, y = Country, group = Country), size = 1.5)
-#  geom_segment(aes(x = Value.x, xend = Value.y, y = Country, yend = Country), size = 1.5, color = 'red')
-
-# p <- ggplot(BetterLifeIndex_Income_Disparity) + geom_point(aes(x = Value.x, y = Country), size = 1.5) + 
-#  geom_point(aes(x = Value.y, y = Country), size = 1.5)
-
-# p + geom_path(aes(x = Value.x, xend = Value.y, y = Country, yend = Country), size = 1.5, alpha = 0.75)
-
-
-# library(plotly)
-# p <- plot_ly(BetterLifeIndex_Income_Disparity, color = I("gray80")) %>%
-#   add_segments(x = ~Value.x, xend = ~Value.y, y = ~Country, yend = ~Country, showlegend = FALSE) %>%
-#   add_markers(x = ~Value.x, y = ~Country, name = "Women", color = I("pink")) %>%
-#   add_markers(x = ~Value.y, y = ~Country, name = "Men", color = I("blue")) %>%
-#   layout(
-#     title = "Gender earnings disparity",
-#     xaxis = list(title = "Annual Salary (in thousands)"),
-#     margin = list(l = 65)
-#   )
+BetterLifeIndex_European %>%
+  filter(Inequality %in% c("Men", "Women") & Indicator == "Feeling safe walking alone at night") %>%
+  ggplot() +
+  geom_line(aes(x = Value, y = Country), color = "grey") +
+  geom_point(aes(x = Value, y = Country, color = Inequality), size = 1.5)+ 
+  scale_color_manual(values = c("Women" = "Red", "Men" = "Blue")) + 
+  labs(title = "Gender disparties in feelings of safety when walking alone \nat night in European OECD countries", x = "Ratio of respondents feeling safe walking alone at night \n(in percentages)", y = "Country") 
 
 ```
 
