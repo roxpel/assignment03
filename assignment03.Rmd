@@ -7,20 +7,20 @@ editor_options:
   chunk_output_type: inline
 ---
 
-# Better Life Performances of OECD countries based on OECD's Better Life Index data 
+Better Life Performances of OECD countries based on OECD's Better Life Index data 
 
 Date
 
-### By Roxane
+By Roxane
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-BetterLifeIndex <- read_csv("BetterLifeIndex.csv")
 library(tidyverse)
 library(ggalt)
+BetterLifeIndex <- read_csv("BetterLifeIndex.csv")
 ```
 
 ```{r}
@@ -31,10 +31,6 @@ str(BetterLifeIndex)
 unique(BetterLifeIndex$Indicator)
 unique(BetterLifeIndex$Country)
 unique(BetterLifeIndex$Unit)
-```
-
-```{r}
-view(BetterLifeIndex)
 ```
 
 ```{r}
@@ -94,8 +90,12 @@ BetterLifeIndex_European %>%
   ggplot() +
   geom_line(aes(x = Value, y = Country), color = "grey") +
   geom_point(aes(x = Value, y = Country, color = Inequality), size = 1.5)+ 
-  scale_color_manual(values = c("Women" = "Red", "Men" = "Blue")) + 
-  labs(title = "Gender disparties in feelings of safety when walking alone \nat night in European OECD countries", x = "Ratio of respondents feeling safe walking alone at night \n(in percentages)", y = "Country") 
+  scale_color_manual(values = c("Women" = "Red", "Men" = "Blue")) + labs(fill = "Gender")
+  
+
+  
+  
+###labs(title = "Gender disparties in feelings of safety when walking alone \nat night in European OECD countries", x = "Ratio of respondents feeling safe walking alone at night \n(in percentages)", y = "Country") + scale
 
 ```
 
