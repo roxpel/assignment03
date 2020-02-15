@@ -32,7 +32,6 @@ unique(BetterLifeIndex$Indicator)
 unique(BetterLifeIndex$Country)
 unique(BetterLifeIndex$Unit)
 ```
-
 ```{r}
 
 # Creating dataframe of only European OECD countries
@@ -51,9 +50,10 @@ BetterLifeIndex_European_bad <- BetterLifeIndex_European %>%
 
   ggplot(BetterLifeIndex_European_bad, aes(x = reorder(Country, -Value), y = Value, fill = Indicator)) + geom_bar(stat = "identity") +
   coord_flip() +
-  labs(title = "Better life index performance on negative indicators \nfor European OECD countries", x = "Country", y = "Average score", caption = "The Average score for the different indicators is calculated \nin percentages, scores, ratio, US dollar, years, micrograms per cubic meter, or hours.", hjust = 1) 
+  labs(title = "Better Life Index performance on negative indicators \nfor European OECD countries", x = "Country", y = "Average score", caption = "The Average score for the different indicators is calculated \nin percentages, scores, ratio, US dollar, years, micrograms per cubic meter, or hours.", hjust = 1) 
     
 ```
+The Better Life Index performance on negative indicators for European OECD countries represents the performance of European OECD countries on the negative indicators of the Better Life Index performance of the OECD, namely: air pollution, dwellings without basic facilities, employees working very long hours, homicide rate, and long-term unemployment rate. The graph represents Greece as the lowest European OECD country in terms of these indicators and is the only country with an average score higher than 150. More specifically, its unemployment rate which scores almost 100, is more than twice as high as most other countries, with the exception of Spain which scores 50. Scandinavian countries are the best performers on these indicators, holding average scores of less than 50. Norway holding the number one place, followed closely by Sweden.
 ```{r}
 
 # Creating new dataframes with leisure/personal care and life satisfaction indicators for all countries to measure their correlation
@@ -81,8 +81,9 @@ ggplot(BetterLifeIndex_Leisure_Satisfaction[1:38,], aes(Value.x, Value.y)) + geo
 # The blue dot represents OECD total (averaged)
 
 ```
-
+The graph above represents life satisfaction in terms of time devoted to leisure and personal care. Essentially, it attempts to show whether there is a correlation between increased leisure and increased happiness; more specifically, whether the former leads to the latter. The blue dot represents the OECD total observation, or the average time devoted to leisure and personal care for all OECD countries. While the correlation is not strong, we do see a general pattern that makes one believe that there is a relationship between the two variables.
 ```{r}
+
 # Creating graph to measure gender inequality in feelings of safety
 
 BetterLifeIndex_European %>%
@@ -90,19 +91,21 @@ BetterLifeIndex_European %>%
   ggplot() +
   geom_line(aes(x = Value, y = Country), color = "grey") +
   geom_point(aes(x = Value, y = Country, color = Inequality), size = 1.5)+ 
-  scale_color_manual(values = c("Women" = "Red", "Men" = "Blue")) + labs(fill = "Gender")
-  
-
-  
-  
-###labs(title = "Gender disparties in feelings of safety when walking alone \nat night in European OECD countries", x = "Ratio of respondents feeling safe walking alone at night \n(in percentages)", y = "Country") + scale
+  scale_color_manual(values = c("Women" = "Red", "Men" = "Blue")) +
+  labs(title = "Gender disparties in feelings of safety \nin European OECD countries", x = "Percentage of people aged 15 and over \nfeeling safe walking alone at night", y = "Country", color = "Gender") 
 
 ```
+Both feelings of safety and gender disparities in feelings of safety vary significantly among European OECD countries. Hungary scores lowest in feelings of safety when walking alone at night both for men and women. While Hungry, Greece, Ireland and Belgium have the lowest scores, between 15% and 20%, gender disparity in feelings of safety is down to 7% to 8% in the United Kingdom and Austria. Scandinavian countries and Slovenia, followed by Switzerland, rank highest in feelings of safety overall, with almost 95% of respondents feelings safe when walking alone at night, but show a higher disparity than countries such as the United Kingdom, Austria and France. While Norway and Iceland are the best performers in overall safety, the United Kingdom, Austria and France show higher gender equality.
+```{r}
+# Creating graph to measure gender inequality in educational attainment
 
+BetterLifeIndex_European %>%
+  filter(Inequality %in% c("Men", "Women") & Indicator == "Educational attainment") %>%
+  ggplot() +
+  geom_line(aes(x = Value, y = Country), color = "grey") +
+  geom_point(aes(x = Value, y = Country, color = Inequality), size = 1.5)+ 
+  scale_color_manual(values = c("Women" = "Orange", "Men" = "Green")) + labs(fill = "Gender") + 
+  labs(title = "Gender disparties in educational \nattainment in European OECD countries", x = "Percentage of adults aged 25 to 64 holding at least \nan upper secondary degree", y = "Country", color = "Gender")
 
-
-
-
-
-
-
+```
+Similar to safety, educational attainment varies significantly across European OECD countries. However, gender equality seems much more attained for education than it is for safety. In some countries such as Portugal, more women hold upper secondary degrees than men, with 50% versus 43%. In Austria, there is a similar gender gap only more men hold upper secondary degrees compared to women, with around 88% versus 81%. Poland and the United Kingdom have the highest performance in gender equality in educational attainment, with Poland holding the best place for gender equality in education and overall education combined. 
